@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriPredict AI - Smart Farming Solutions India</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff7ed 0%, #fef9c3 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            background: #ea580c;
+            padding: 1rem;
+            border-radius: 1rem;
+            color: white;
+            font-size: 3rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: #ea580c;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 1rem;
+        }
+
+        .login-btn:hover { background: #c2410c; }
+
+        .forgot-password, .back-to-home {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a, .back-to-home a {
+            color: #ea580c;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .forgot-password a:hover, .back-to-home a:hover { text-decoration: underline; }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #ea580c;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #ea580c, #16a34a);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .india-flag {
+            display: flex;
+            gap: 2px;
+            height: 18px;
+            width: 28px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-left: 0.5rem;
+        }
+
+        .india-flag .saffron { background: #FF9933; flex: 1; }
+        .india-flag .white   { background: #FFFFFF; flex: 1; }
+        .india-flag .green   { background: #138808; flex: 1; }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .notification-badge { position: relative; }
+
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover { background: #dc2626; }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Season banner */
+        .season-banner {
+            background: linear-gradient(90deg, #ea580c 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Weather Cards */
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .weather-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .weather-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .weather-icon.temperature { background: #fee2e2; color: #dc2626; }
+        .weather-icon.humidity    { background: #cffafe; color: #0891b2; }
+        .weather-icon.wind        { background: #f3f4f6; color: #6b7280; }
+        .weather-icon.rainfall    { background: #dbeafe; color: #2563eb; }
+        .weather-icon.conditions  { background: #fef3c7; color: #d97706; }
+
+        .weather-info h3 {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .weather-info p {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 300px;
+            gap: 2rem;
+        }
+
+        /* Panels */
+        .prediction-panel, .notifications-panel, .results-panel {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+
+        .predict-btn {
+            width: 100%;
+            background: #ea580c;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .predict-btn:hover:not(:disabled) { background: #c2410c; }
+        .predict-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Notifications */
+        .notification-item {
+            padding: 0.75rem;
+            background: #fff7ed;
+            border-radius: 0.5rem;
+            border-left: 4px solid #ea580c;
+            margin-bottom: 0.75rem;
+        }
+
+        .notification-item.blue {
+            background: #eff6ff;
+            border-left-color: #2563eb;
+        }
+
+        .notification-item.green {
+            background: #f0fdf4;
+            border-left-color: #16a34a;
+        }
+
+        .notification-item p {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-item span {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Results Panel */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item { text-align: center; }
+
+        .result-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .result-circle.yield      { background: #fff7ed; color: #9a3412; }
+        .result-circle.confidence { background: #dbeafe; color: #1e40af; }
+
+        .result-label  { font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem; }
+        .result-value  { font-weight: 600; color: #1f2937; }
+
+        .factor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .factor-name   { font-size: 0.875rem; font-weight: 500; }
+        .factor-progress { display: flex; align-items: center; gap: 0.5rem; }
+        .factor-impact { font-size: 0.875rem; color: #6b7280; }
+
+        .progress-bar {
+            width: 60px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill { height: 100%; background: #ea580c; border-radius: 4px; }
+
+        .recommendation-list { list-style: none; }
+
+        .recommendation-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .recommendation-list li::before {
+            content: "•";
+            color: #ea580c;
+            font-weight: bold;
+            margin-top: 0.125rem;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .chart-panel {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .chart-title { font-size: 1.125rem; font-weight: 600; color: #374151; margin-bottom: 1rem; }
+        .chart-container { position: relative; height: 250px; }
+
+        /* AI Chatbot */
+        .chatbot-panel {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .chatbot-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, #fff7ed, white);
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+
+        .chatbot-header h3 { font-size: 1.125rem; font-weight: 600; color: #1f2937; }
+
+        .chatbot-status {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .message.bot {
+            background: #f3f4f6;
+            color: #1f2937;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .message.user {
+            background: #ea580c;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message-time { font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem; }
+
+        .chatbot-input {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .chatbot-input input:focus {
+            outline: none;
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        }
+
+        .send-btn {
+            background: #ea580c;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .send-btn:hover    { background: #c2410c; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f3f4f6;
+            border-radius: 1rem;
+            border-bottom-left-radius: 0.25rem;
+            align-self: flex-start;
+            max-width: 80%;
+        }
+
+        .typing-dots { display: flex; gap: 0.25rem; }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30%            { transform: translateY(-10px); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Hidden */
+        .hidden { display: none; }
+
+        /* Map */
+        #map {
+            width: 100%;
+            min-width: 0;
+            min-height: 200px;
+            max-height: 500px;
+            height: 500px;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container { padding: 1rem; }
+            .main-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .chatbot-panel { position: relative; height: 400px; top: 0; }
+            #map { height: 400px; }
+        }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .chatbot-panel { height: 300px; }
+            #map { height: 300px; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0.5rem; }
+            .header-content { flex-direction: column; gap: 0.5rem; padding: 1rem; }
+            .main-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+            .charts-grid, .results-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+            .chatbot-panel { height: 250px; }
+            #map { height: 200px; }
+            .prediction-panel, .notifications-panel, .results-panel, .chart-panel { padding: 1rem; margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="login-page" class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <h2 class="login-title">स्वागत है | Welcome</h2>
+            <p class="login-subtitle">Sign in to your AgriPredict AI account — India</p>
+        </div>
+        <form class="login-form" id="login-form">
+            <div class="form-group">
+                <label for="email">Email Address / ईमेल पता</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password / पासवर्ड</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            <button type="submit" class="login-btn">Sign In / साइन इन करें</button>
+            <div class="forgot-password">
+                <a href="#" onclick="alert('Password reset functionality will be integrated with your backend API')">Forgot your password?</a>
+            </div>
+            <div class="back-to-home" style="margin-top:1rem;">
+                <a href="index.html">← Back to Home</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="main-app" class="hidden">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo"><i class="fas fa-seedling"></i></div>
+                <div class="logo-text">
+                    <h1 style="display:flex;align-items:center;gap:0.5rem;">
+                        AgriPredict AI
+                        <span class="india-flag">
+                            <span class="saffron"></span>
+                            <span class="white"></span>
+                            <span class="green"></span>
+                        </span>
+                    </h1>
+                    <p>Smart Farming Solutions — भारत</p>
+                </div>
+            </div>
+            <div class="header-info">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="selected-region">Punjab</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <span id="user-name">Kisan</span>
+                </div>
+                <div class="notification-badge">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notification-count">3</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Season Banner -->
+        <div class="season-banner">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Current Season: <strong>Rabi 2025–26</strong> &nbsp;|&nbsp; Sowing Window: Oct – Dec &nbsp;|&nbsp; Harvest: Mar – Apr</span>
+        </div>
+
+        <!-- Weather Cards -->
+        <div class="weather-grid">
+            <div class="weather-card">
+                <div class="weather-icon temperature"><i class="fas fa-thermometer-half"></i></div>
+                <div class="weather-info">
+                    <h3>Temperature</h3>
+                    <p id="temperature">32°C</p>
+                </div>
+            </div>
+            <div class="weather-card">
+                <div class="weather-icon humidity"><i class="fas fa-tint"></i></div>
+                <div class="weather-info">
+                    <h3>Humidity</h3>
+                    <p id="humidity">74%</p>
+                </div>
+            </div>
+            <div class="weather-card">
+                <div class="weather-icon wind"><i class="fas fa-wind"></i></div>
+                <div class="weather-info">
+                    <h3>Wind Speed</h3>
+                    <p id="wind-speed">18 km/h</p>
+                </div>
+            </div>
+            <div class="weather-card">
+                <div class="weather-icon rainfall"><i class="fas fa-cloud-rain"></i></div>
+                <div class="weather-info">
+                    <h3>Rainfall</h3>
+                    <p id="rainfall">22mm</p>
+                </div>
+            </div>
+            <div class="weather-card">
+                <div class="weather-icon conditions"><i class="fas fa-cloud-sun"></i></div>
+                <div class="weather-info">
+                    <h3>Conditions</h3>
+                    <p id="conditions">Partly Cloudy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+
+            <!-- ====== LEFT COLUMN ====== -->
+            <div class="left-column">
+
+                <!-- Prediction Panel -->
+                <div class="prediction-panel">
+                    <h2 class="panel-title">
+                        <i class="fas fa-chart-line" style="color:#ea580c;"></i>
+                        Yield Prediction / उपज पूर्वानुमान
+                    </h2>
+
+                    <div class="form-group">
+                        <label for="crop-select">Select Crop / फसल चुनें</label>
+                        <select id="crop-select">
+                            <option value="Wheat">Wheat (गेहूँ)</option>
+                            <option value="Rice">Rice (धान)</option>
+                            <option value="Maize">Maize (मक्का)</option>
+                            <option value="Cotton">Cotton (कपास)</option>
+                            <option value="Sugarcane">Sugarcane (गन्ना)</option>
+                            <option value="Soybean">Soybean (सोयाबीन)</option>
+                            <option value="Pulses">Pulses/Dal (दालें)</option>
+                            <option value="Bajra">Bajra (बाजरा)</option>
+                            <option value="Jowar">Jowar (ज्वार)</option>
+                            <option value="Mustard">Mustard (सरसों)</option>
+                            <option value="Turmeric">Turmeric (हल्दी)</option>
+                            <option value="Groundnut">Groundnut (मूँगफली)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="region-select">Select State / राज्य चुनें</label>
+                        <select id="region-select">
+                            <option value="Punjab">Punjab (पंजाब)</option>
+                            <option value="Haryana">Haryana (हरियाणा)</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
+                            <option value="Maharashtra">Maharashtra (महाराष्ट्र)</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
+                            <option value="Rajasthan">Rajasthan (राजस्थान)</option>
+                            <option value="Karnataka">Karnataka (कर्नाटक)</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh (आंध्र प्रदेश)</option>
+                            <option value="Tamil Nadu">Tamil Nadu (तमिलनाडु)</option>
+                            <option value="West Bengal">West Bengal (पश्चिम बंगाल)</option>
+                            <option value="Bihar">Bihar (बिहार)</option>
+                            <option value="Gujarat">Gujarat (गुजरात)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="season-select">Season / मौसम</label>
+                        <select id="season-select">
+                            <option value="Kharif">Kharif (खरीफ) — Jun–Sep</option>
+                            <option value="Rabi" selected>Rabi (रबी) — Oct–Mar</option>
+                            <option value="Zaid">Zaid (जायद) — Mar–Jun</option>
+                        </select>
+                    </div>
+
+                    <button id="predict-btn" class="predict-btn">
+                        Generate Prediction / पूर्वानुमान करें
+                    </button>
+                </div>
+
+                <!-- Notifications Panel -->
+                <div class="notifications-panel">
+                    <h3 class="panel-title">
+                        <i class="fas fa-bell" style="color:#ea580c;"></i>
+                        Recent Alerts / हाल की चेतावनियाँ
+                    </h3>
+                    <div id="notifications-container">
+                        <div class="notification-item">
+                            <p>🌧️ IMD: Heavy rainfall expected in next 3 days — check field drainage</p>
+                            <span>2 घंटे पहले · 2 hours ago</span>
+                        </div>
+                        <div class="notification-item blue">
+                            <p>🐛 Locust swarm alert issued for Rajasthan & Gujarat border</p>
+                            <span>1 दिन पहले · 1 day ago</span>
+                        </div>
+                        <div class="notification-item green">
+                            <p>🌾 Rabi wheat optimal sowing window active in North India</p>
+                            <span>3 दिन पहले · 3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== MIDDLE COLUMN ====== -->
+            <div class="middle-column">
+
+                <!-- Results Panel -->
+                <div id="results-panel" class="results-panel hidden">
+                    <h3 class="panel-title">Prediction Results / परिणाम</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-circle yield">
+                                <span id="yield-estimate">0</span>
+                            </div>
+                            <p class="result-label">Predicted Yield / अनुमानित उपज</p>
+                            <p class="result-value">tonnes/hectare</p>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-circle confidence">
+                                <span id="confidence-level">0%</span>
+                            </div>
+                            <p class="result-label">Confidence Level</p>
+                            <p class="result-value">Accuracy</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="font-weight:600;color:#1f2937;margin-bottom:0.75rem;">Key Factors / मुख्य कारक</h4>
+                        <div id="factors-container"></div>
+                    </div>
+
+                    <div style="margin-top:1.5rem;">
+                        <h4 style="font-weight:600;color:#1f2937;margin-bottom:0.75rem;">Recommendations / सिफारिशें</h4>
+                        <ul id="recommendations-container" class="recommendation-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Map Panel -->
+                <div id="map-panel" class="prediction-panel" style="margin-bottom:2rem;">
+                    <h2 class="panel-title">
+                        <i class="fas fa-map" style="color:#ea580c;"></i>
+                        Select Region on Map / नक्शे पर क्षेत्र चुनें
+                    </h2>
+                    <div id="map" style="height:500px;border-radius:0.75rem;margin-bottom:1rem;"></div>
+                    <div id="map-info" style="font-size:0.875rem;color:#374151;"></div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-panel">
+                        <h3 class="chart-title">Monsoon Forecast / मानसून पूर्वानुमान</h3>
+                        <div class="chart-container">
+                            <canvas id="weather-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-panel">
+                        <h3 class="chart-title">Yield History / उपज इतिहास</h3>
+                        <div class="chart-container">
+                            <canvas id="yield-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== RIGHT COLUMN — AI Chatbot ====== -->
+            <div class="right-column">
+                <div class="chatbot-panel">
+                    <div class="chatbot-header">
+                        <i class="fas fa-robot" style="color:#ea580c;font-size:1.25rem;"></i>
+                        <h3>KisanBot Assistant</h3>
+                        <div class="chatbot-status"></div>
+                    </div>
+                    <div class="chatbot-messages" id="chatbot-messages">
+                        <div class="message bot">
+                            <div>नमस्ते! 🌾 I'm KisanBot, your AI farming assistant for India. I can help with crop advice, monsoon insights, MSP rates, pest management, and government schemes like PM-KISAN and PMFBY.</div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                    <div class="chatbot-input">
+                        <input type="text" id="chat-input" placeholder="Ask about crops, MSP, schemes..." maxlength="500">
+                        <button class="send-btn" id="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /main-grid -->
+    </div><!-- /container -->
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>🌾 जय किसान | Supporting SDG 2: Zero Hunger · PM-KISAN · PMFBY · Doubling Farmers' Income · भारत सरकार</p>
+    </div>
+
+</div><!-- /main-app -->
+
+<script>
+// ===================== APP STATE =====================
+let app = {
+    selectedCrop: 'Wheat',
+    selectedRegion: 'Punjab',
+    selectedSeason: 'Rabi',
+    isLoading: false,
+    weatherChart: null,
+    yieldChart: null,
+    currentUser: null,
+    chatHistory: []
+};
+
+// ===================== INDIA MONTHLY WEATHER DATA (representative) =====================
+const weatherData = [
+    { month: 'Jan', rainfall: 18,  temperature: 15 },
+    { month: 'Feb', rainfall: 20,  temperature: 18 },
+    { month: 'Mar', rainfall: 14,  temperature: 24 },
+    { month: 'Apr', rainfall: 10,  temperature: 31 },
+    { month: 'May', rainfall: 18,  temperature: 36 },
+    { month: 'Jun', rainfall: 95,  temperature: 34 },
+    { month: 'Jul', rainfall: 210, temperature: 30 },
+    { month: 'Aug', rainfall: 195, temperature: 29 },
+    { month: 'Sep', rainfall: 145, temperature: 29 },
+    { month: 'Oct', rainfall: 45,  temperature: 27 },
+    { month: 'Nov', rainfall: 20,  temperature: 22 },
+    { month: 'Dec', rainfall: 12,  temperature: 16 }
+];
+
+// India yield history (national avg tonnes/ha)
+const yieldHistory = [
+    { year: '2020', predicted: 3.0, actual: 2.8 },
+    { year: '2021', predicted: 3.2, actual: 3.4 },
+    { year: '2022', predicted: 3.5, actual: 3.3 },
+    { year: '2023', predicted: 3.7, actual: 3.6 },
+    { year: '2024', predicted: 3.9, actual: 3.8 }
+];
+
+// ===================== INDIA-SPECIFIC CHATBOT RESPONSES =====================
+const chatbotResponses = {
+    greetings: [
+        "नमस्ते! How can I assist you with your farming today? / आज आपकी खेती में कैसे मदद करूँ?",
+        "Hello, Kisan! What farming questions do you have for me today?",
+        "Welcome! I'm ready to help you with crops, schemes, and market prices."
+    ],
+    weather: [
+        "The IMD monsoon forecast for India shows above-normal rainfall in the Western Ghats and central India. Ensure proper drainage in paddy fields to prevent waterlogging.",
+        "Current weather conditions are suitable for Rabi sowing in North India. Temperature below 25°C is ideal for wheat germination.",
+        "The monsoon withdrawal has begun from northwest India. This is the optimal time to prepare fields for Rabi crops like wheat and mustard."
+    ],
+    crops: [
+        "Wheat (गेहूँ): Sow in late October–November. Recommended varieties: HD-2967, PBW-343, GW-322. Apply DAP at sowing and top-dress with urea at tillering stage.",
+        "Paddy/Rice: Use SRI (System of Rice Intensification) for 20–30% water savings. Popular varieties: Swarna, Basmati 1121, IR-36. Watch for blast and brown planthopper.",
+        "Cotton: Bt-Cotton varieties approved by CIB&RC are widely used. Ensure proper IPM to control bollworm. Best in Maharashtra, Gujarat, Telangana."
+    ],
+    msp: [
+        "MSP for Wheat 2024-25: ₹2,275 per quintal (declared by CACP). Procurement through FCI and state agencies like PUNGRAIN and HAFED.",
+        "Paddy MSP 2024-25: ₹2,300 per quintal (Common), ₹2,320 per quintal (Grade A). Procurement happens Oct–Dec in kharif marketing season.",
+        "For all crop MSPs, visit the CACP website or call the PM-Kisan helpline: 155261."
+    ],
+    schemes: [
+        "PM-KISAN: ₹6,000/year direct transfer to farmer families in 3 instalments. Register on pmkisan.gov.in or your nearest Common Service Centre.",
+        "PMFBY (Pradhan Mantri Fasal Bima Yojana): Crop insurance for kharif and rabi crops. Premium: 2% for kharif, 1.5% for rabi. Contact your nearest bank or Krishi Vigyan Kendra.",
+        "Soil Health Card Scheme: Free soil testing and nutrient recommendations. Visit soilhealth.dac.gov.in or your block agriculture office."
+    ],
+    pests: [
+        "Fall Armyworm (Spodoptera frugiperda) is a threat to maize in India. Use pheromone traps for monitoring and spray chlorantraniliprole at 0.4 ml/litre if infestation is detected.",
+        "For wheat aphid control, encourage natural predators and apply imidacloprid 17.8 SL @ 0.5 ml/litre if >5 aphids per tiller are observed.",
+        "Locust monitoring: Follow DLPO (Desert Locust Protection Organisation) alerts. Contact 1800-180-1551 for locust control assistance."
+    ],
+    default: [
+        "Great question! For specific advice, contact your nearest Krishi Vigyan Kendra (KVK) or call the Kisan Call Centre on 1800-180-1551 (toll-free).",
+        "I'd be happy to help. Could you give more details about your crop, district, and the issue you're facing?",
+        "You can also check the eNAM platform (enam.gov.in) for live mandi prices near you."
+    ]
+};
+
+// ===================== LOGIN =====================
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email    = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        if (email && password) {
+            app.currentUser = {
+                email: email,
+                name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1)
+            };
+            document.getElementById('user-name').textContent = app.currentUser.name;
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            initializeMainApp();
+        } else {
+            alert('Please enter valid credentials');
+        }
+    });
+});
+
+// ===================== INIT =====================
+function initializeMainApp() {
+    initializeEventListeners();
+    initializeCharts();
+    initializeChatbot();
+    initializeMap();
+}
+
+function initializeEventListeners() {
+    document.getElementById('crop-select').addEventListener('change', e => app.selectedCrop = e.target.value);
+    document.getElementById('season-select').addEventListener('change', e => app.selectedSeason = e.target.value);
+    document.getElementById('region-select').addEventListener('change', function(e) {
+        app.selectedRegion = e.target.value;
+        document.getElementById('selected-region').textContent = e.target.value;
+        updateWeatherDetails(e.target.value);
+    });
+    document.getElementById('predict-btn').addEventListener('click', generatePrediction);
+}
+
+// ===================== CHARTS =====================
+function initializeCharts() {
+    // Monsoon / Weather Chart
+    const ctx1 = document.getElementById('weather-chart').getContext('2d');
+    app.weatherChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: weatherData.map(d => d.month),
+            datasets: [
+                {
+                    label: 'Rainfall (mm)',
+                    data: weatherData.map(d => d.rainfall),
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Temp (°C)',
+                    data: weatherData.map(d => d.temperature),
+                    borderColor: '#ea580c',
+                    backgroundColor: 'rgba(234,88,12,0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Yield History Chart
+    const ctx2 = document.getElementById('yield-chart').getContext('2d');
+    app.yieldChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: yieldHistory.map(d => d.year),
+            datasets: [
+                {
+                    label: 'Predicted',
+                    data: yieldHistory.map(d => d.predicted),
+                    backgroundColor: '#ea580c',
+                    borderColor: '#c2410c',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Actual',
+                    data: yieldHistory.map(d => d.actual),
+                    backgroundColor: '#16a34a',
+                    borderColor: '#15803d',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Yield (tonnes/hectare)' }
+                }
+            }
+        }
+    });
+}
+
+// ===================== CHATBOT =====================
+function initializeChatbot() {
+    const chatInput = document.getElementById('chat-input');
+    chatInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+}
+
+function sendMessage() {
+    const input   = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+    addMessage(message, 'user');
+    input.value = '';
+    showTypingIndicator();
+    setTimeout(() => {
+        hideTypingIndicator();
+        addMessage(generateChatbotResponse(message), 'bot');
+    }, 1000 + Math.random() * 1500);
+}
+
+function addMessage(text, sender) {
+    const container = document.getElementById('chatbot-messages');
+    const div       = document.createElement('div');
+    div.className   = `message ${sender}`;
+    const time      = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    div.innerHTML   = `<div>${text}</div><div class="message-time">${time}</div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    app.chatHistory.push({ message: text, sender, timestamp: new Date().toISOString() });
+}
+
+function showTypingIndicator() {
+    const container = document.getElementById('chatbot-messages');
+    const div = document.createElement('div');
+    div.className = 'typing-indicator';
+    div.id = 'typing-indicator';
+    div.innerHTML = `<div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span>KisanBot is typing...</span>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+}
+
+function generateChatbotResponse(message) {
+    const m = message.toLowerCase();
+    if (m.includes('hello') || m.includes('hi') || m.includes('नमस्ते'))
+        return getRandom(chatbotResponses.greetings);
+    if (m.includes('weather') || m.includes('rain') || m.includes('monsoon') || m.includes('मानसून') || m.includes('बारिश'))
+        return getRandom(chatbotResponses.weather);
+    if (m.includes('msp') || m.includes('price') || m.includes('rate') || m.includes('market') || m.includes('भाव'))
+        return getRandom(chatbotResponses.msp);
+    if (m.includes('scheme') || m.includes('kisan') || m.includes('pmfby') || m.includes('insurance') || m.includes('योजना'))
+        return getRandom(chatbotResponses.schemes);
+    if (m.includes('crop') || m.includes('plant') || m.includes('wheat') || m.includes('rice') || m.includes('गेहूँ') || m.includes('धान') || m.includes('cotton') || m.includes('sugarcane'))
+        return getRandom(chatbotResponses.crops);
+    if (m.includes('pest') || m.includes('insect') || m.includes('disease') || m.includes('locust') || m.includes('कीट'))
+        return getRandom(chatbotResponses.pests);
+    return getRandom(chatbotResponses.default);
+}
+
+function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// ===================== PREDICTION =====================
+// Crop-specific yield ranges (tonnes/ha, India averages)
+const cropYieldRanges = {
+    'Wheat':     [3.5, 5.5],
+    'Rice':      [2.5, 4.5],
+    'Maize':     [2.8, 4.8],
+    'Cotton':    [1.5, 2.5],
+    'Sugarcane': [65, 90],
+    'Soybean':   [1.2, 2.2],
+    'Pulses':    [0.8, 1.5],
+    'Bajra':     [1.2, 2.0],
+    'Jowar':     [1.0, 1.8],
+    'Mustard':   [1.5, 2.5],
+    'Turmeric':  [6.0, 9.0],
+    'Groundnut': [1.8, 3.0]
+};
+
+const cropRecommendations = {
+    'Wheat':     ['Apply DAP at 120 kg/ha at sowing','Top-dress with urea at tillering (6 weeks)','Irrigate at crown root initiation (CRI) stage','Watch for yellow rust in Nov–Dec'],
+    'Rice':      ['Use SRI method to save 20–30% water','Apply zinc sulphate if yellowing observed','Monitor for stem borer and BPH','Drain field 10 days before harvest'],
+    'Maize':     ['Apply starter dose of N:P:K 40:60:40','Hill up soil around plants at knee height','Use pheromone traps for fall armyworm','Harvest when grain moisture is below 20%'],
+    'Cotton':    ['Follow recommended plant population (1.5–2 lakh/ha)','Apply foliar micronutrients at boll development','Scout twice/week for bollworm','Defoliate before mechanical picking'],
+    'Sugarcane': ['Use single bud setts for better germination','Apply trash mulching to conserve moisture','Earthing up at 45 and 90 days','Ratoon management: trash burning avoided'],
+    'Soybean':   ['Treat seeds with Rhizobium + PSB before sowing','Maintain field wilt for 2–3 days after pod filling','Use broadleaf weedicide within 15–20 DAS','Harvest when 95% pods are mature'],
+    'Pulses':    ['Use short-duration varieties for intercropping','Apply boron @ 0.3% foliar spray at flowering','Irrigate at pre-flowering and pod filling','Harvest at 70–80% pod maturity to avoid shattering'],
+    'Bajra':     ['Direct sow in June after first good rain','Thin plants to 15 cm spacing at 3 leaf stage','Apply 40:20:0 NPK kg/ha','Downy mildew resistant varieties recommended'],
+    'Jowar':     ['Gap-fill within 8–10 DAS','Apply nitrogen in two splits','Avoid water stress during flowering','Watch for shoot fly in early kharif'],
+    'Mustard':   ['Sow by 15th October in North India','Use B-9 seed treatment for improved germination','Apply 0.1% borax spray at flowering','Harvest when 75% siliqua turn yellow'],
+    'Turmeric':  ['Use disease-free rhizomes from KVK','Ridge and furrow planting improves drainage','Mulch with green leaves to retain moisture','Apply earthing up at 60 and 120 DAS'],
+    'Groundnut': ['Treat seed with Trichoderma viride','Gypsum application at peg initiation (30–35 DAS)','Avoid irrigation at maturity stage','Harvest at 70% leaf yellowing']
+};
+
+function generatePrediction() {
+    if (app.isLoading) return;
+    app.isLoading = true;
+    const btn = document.getElementById('predict-btn');
+    btn.innerHTML = '<span class="loading"></span>Analysing...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+        const range = cropYieldRanges[app.selectedCrop] || [2.0, 4.0];
+        const yieldEst = (Math.random() * (range[1] - range[0]) + range[0]).toFixed(1);
+        const confidence = Math.floor(Math.random() * 15 + 82);
+
+        const prediction = {
+            yieldEstimate: yieldEst,
+            confidence,
+            factors: [
+                { name: 'Monsoon / Rainfall',   impact: 'Positive', score: 87 },
+                { name: 'Soil Health',           impact: 'Good',     score: 80 },
+                { name: 'Pest / Disease Risk',   impact: 'Low',      score: 90 },
+                { name: 'Market Conditions',     impact: 'Stable',   score: 85 }
+            ],
+            recommendations: cropRecommendations[app.selectedCrop] ||
+                ['Follow local KVK recommendations','Monitor soil moisture regularly','Use certified seeds','Apply balanced fertilisers as per soil test']
+        };
+
+        displayPredictionResults(prediction);
+        app.isLoading = false;
+        btn.innerHTML = 'Generate Prediction / पूर्वानुमान करें';
+        btn.disabled = false;
+    }, 2000);
+}
+
+function displayPredictionResults(prediction) {
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('yield-estimate').textContent    = prediction.yieldEstimate;
+    document.getElementById('confidence-level').textContent  = prediction.confidence + '%';
+
+    const factorsEl = document.getElementById('factors-container');
+    factorsEl.innerHTML = '';
+    prediction.factors.forEach(f => {
+        const el = document.createElement('div');
+        el.className = 'factor-item';
+        el.innerHTML = `
+            <span class="factor-name">${f.name}</span>
+            <div class="factor-progress">
+                <span class="factor-impact">${f.impact}</span>
+                <div class="progress-bar"><div class="progress-fill" style="width:${f.score}%"></div></div>
+            </div>`;
+        factorsEl.appendChild(el);
+    });
+
+    const recsEl = document.getElementById('recommendations-container');
+    recsEl.innerHTML = '';
+    prediction.recommendations.forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = r;
+        recsEl.appendChild(li);
+    });
+
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===================== MAP =====================
+function initializeMap() {
+    // Centred on India
+    const map = L.map('map').setView([20.5937, 78.9629], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const regions = [
+        {
+            name: 'Punjab',
+            crop: 'Wheat, Rice, Maize',
+            conditions: 'Semi-arid, Good canal irrigation',
+            polygon: [[29.5, 73.8], [32.5, 73.8], [32.5, 76.9], [29.5, 76.9]]
+        },
+        {
+            name: 'Haryana',
+            crop: 'Wheat, Rice, Mustard',
+            conditions: 'Semi-arid, Tube-well irrigation',
+            polygon: [[27.6, 74.5], [30.9, 74.5], [30.9, 77.6], [27.6, 77.6]]
+        },
+        {
+            name: 'Uttar Pradesh',
+            crop: 'Wheat, Sugarcane, Rice, Pulses',
+            conditions: 'Subtropical, Gangetic plains',
+            polygon: [[23.8, 77.1], [30.4, 77.1], [30.4, 84.6], [23.8, 84.6]]
+        },
+        {
+            name: 'Maharashtra',
+            crop: 'Cotton, Sugarcane, Soybean',
+            conditions: 'Tropical, Mixed rainfall',
+            polygon: [[15.6, 72.6], [22.0, 72.6], [22.0, 80.9], [15.6, 80.9]]
+        },
+        {
+            name: 'Madhya Pradesh',
+            crop: 'Soybean, Wheat, Gram',
+            conditions: 'Tropical, Central plateau',
+            polygon: [[21.1, 74.0], [26.9, 74.0], [26.9, 82.8], [21.1, 82.8]]
+        },
+        {
+            name: 'Rajasthan',
+            crop: 'Bajra, Mustard, Groundnut',
+            conditions: 'Arid/Semi-arid, Low rainfall',
+            polygon: [[23.0, 69.5], [30.2, 69.5], [30.2, 78.2], [23.0, 78.2]]
+        },
+        {
+            name: 'Karnataka',
+            crop: 'Rice, Jowar, Cotton, Sugarcane',
+            conditions: 'Tropical, Varied rainfall',
+            polygon: [[11.6, 74.0], [18.5, 74.0], [18.5, 78.6], [11.6, 78.6]]
+        },
+        {
+            name: 'Tamil Nadu',
+            crop: 'Rice, Groundnut, Turmeric',
+            conditions: 'Tropical, NE Monsoon dependent',
+            polygon: [[8.1, 76.2], [13.6, 76.2], [13.6, 80.3], [8.1, 80.3]]
+        },
+        {
+            name: 'West Bengal',
+            crop: 'Rice, Jute, Potato',
+            conditions: 'Humid tropical, High rainfall',
+            polygon: [[21.5, 85.8], [27.2, 85.8], [27.2, 89.9], [21.5, 89.9]]
+        },
+        {
+            name: 'Gujarat',
+            crop: 'Groundnut, Cotton, Wheat',
+            conditions: 'Semi-arid, Coastal',
+            polygon: [[20.1, 68.2], [24.7, 68.2], [24.7, 74.5], [20.1, 74.5]]
+        }
+    ];
+
+    const colorMap = {
+        'Punjab': '#ea580c', 'Haryana': '#d97706', 'Uttar Pradesh': '#16a34a',
+        'Maharashtra': '#7c3aed', 'Madhya Pradesh': '#0891b2', 'Rajasthan': '#dc2626',
+        'Karnataka': '#059669', 'Tamil Nadu': '#2563eb', 'West Bengal': '#db2777',
+        'Gujarat': '#ca8a04'
+    };
+
+    regions.forEach(region => {
+        L.polygon(region.polygon, {
+            color: colorMap[region.name] || '#ea580c',
+            weight: 2,
+            fillOpacity: 0.25
+        })
+        .addTo(map)
+        .bindTooltip(region.name, { permanent: false, direction: 'center' })
+        .on('click', () => showMapInfo(region));
+    });
+
+    // State capital markers
+    const capitals = [
+        { name: 'Chandigarh (PB)', lat: 30.74, lng: 76.79 },
+        { name: 'Lucknow (UP)',    lat: 26.85, lng: 80.95 },
+        { name: 'Mumbai (MH)',     lat: 19.08, lng: 72.88 },
+        { name: 'Bhopal (MP)',     lat: 23.26, lng: 77.41 },
+        { name: 'Jaipur (RJ)',     lat: 26.91, lng: 75.79 },
+        { name: 'Bengaluru (KA)',  lat: 12.97, lng: 77.59 },
+        { name: 'Chennai (TN)',    lat: 13.08, lng: 80.27 },
+        { name: 'Kolkata (WB)',    lat: 22.57, lng: 88.36 },
+        { name: 'Gandhinagar (GJ)',lat: 23.22, lng: 72.65 }
+    ];
+
+    capitals.forEach(c => {
+        L.circleMarker([c.lat, c.lng], { radius: 5, color: '#1f2937', fillColor: '#fff', fillOpacity: 1, weight: 2 })
+            .addTo(map)
+            .bindTooltip(c.name);
+    });
+
+    function showMapInfo(region) {
+        document.getElementById('map-info').innerHTML = `
+            <div style="background:#fff7ed;padding:0.75rem;border-radius:0.5rem;border-left:4px solid #ea580c;">
+                <strong>📍 State:</strong> ${region.name}<br>
+                <strong>🌦 Conditions:</strong> ${region.conditions}<br>
+                <strong>🌾 Key Crops:</strong> ${region.crop}
+            </div>`;
+        document.getElementById('selected-region').textContent = region.name;
+        // Sync dropdown if option exists
+        const sel = document.getElementById('region-select');
+        for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value === region.name) { sel.selectedIndex = i; break; }
+        }
+        updateWeatherDetails(region.name);
+    }
+}
+
+// ===================== WEATHER UPDATE =====================
+async function updateWeatherDetails(region) {
+    try {
+        const res  = await fetch(`http://localhost:3001/api/weather?location=${encodeURIComponent(region + ', India')}`);
+        const data = await res.json();
+        if (!data.current) throw new Error('No data');
+        document.getElementById('temperature').textContent  = data.current.temperature + '°C';
+        document.getElementById('humidity').textContent     = data.current.humidity + '%';
+        document.getElementById('wind-speed').textContent   = data.current.wind_speed + ' km/h';
+        document.getElementById('rainfall').textContent     = (data.current.precip || 0) + 'mm';
+        document.getElementById('conditions').textContent   = data.current.weather_descriptions[0] || 'N/A';
+    } catch {
+        // Fallback to simulated India-range values if API unavailable
+        document.getElementById('temperature').textContent  = (Math.floor(Math.random()*10)+28) + '°C';
+        document.getElementById('humidity').textContent     = (Math.floor(Math.random()*20)+65) + '%';
+        document.getElementById('wind-speed').textContent   = (Math.floor(Math.random()*12)+10) + ' km/h';
+        document.getElementById('rainfall').textContent     = (Math.floor(Math.random()*25)+5) + 'mm';
+        document.getElementById('conditions').textContent   = ['Partly Cloudy','Sunny','Overcast','Light Rain'][Math.floor(Math.random()*4)];
+    }
+}
+
+// ===================== LOGOUT =====================
+function logout() {
+    if (confirm('Are you sure you want to logout? / क्या आप लॉगआउट करना चाहते हैं?')) {
+        app.currentUser = null;
+        app.chatHistory = [];
+        document.getElementById('main-app').classList.add('hidden');
+        document.getElementById('login-page').classList.remove('hidden');
+        document.getElementById('email').value    = '';
+        document.getElementById('password').value = '';
+        document.getElementById('results-panel').classList.add('hidden');
+    }
+}
+
+// ===================== AUTO-REFRESH WEATHER (every 30s) =====================
+setInterval(() => {
+    if (app.currentUser) updateWeatherDetails(app.selectedRegion);
+}, 30000);
+</script>
+</body>
+</html>
