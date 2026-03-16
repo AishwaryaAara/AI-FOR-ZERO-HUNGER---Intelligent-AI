@@ -1,252 +1,109 @@
-🌾 HarvestAI – Intelligent Crop Yield Prediction & Smart Farming Platform
+AI for Zero Hunger – Intelligent AI for Smart Agriculture
 
-HarvestAI is an AI-powered smart agriculture platform designed to help farmers make data-driven decisions using crop yield prediction, weather insights, and farm analytics.
+AI for Zero Hunger is an AI-powered smart agriculture platform designed to help farmers make better crop planning decisions using data-driven insights. The system focuses on improving agricultural productivity by predicting crop yield based on environmental conditions and soil nutrients.
 
-The platform leverages Machine Learning, Data Visualization, and Web Technologies to analyze agricultural data such as soil nutrients, rainfall, and temperature to predict crop yield and provide intelligent farming recommendations.
+The platform analyzes agricultural parameters such as temperature, rainfall, humidity, and soil nutrient levels to generate crop yield predictions and farming insights. By combining machine learning with an interactive web interface, the system helps farmers understand their farm conditions and make informed decisions.
 
-HarvestAI aims to support sustainable agriculture and global food security, contributing to the United Nations Sustainable Development Goal 2: Zero Hunger.
+This project contributes toward improving agricultural efficiency and supporting global food security, aligning with the United Nations Sustainable Development Goal 2: Zero Hunger.
 
-🚀 Project Overview
+Project Overview
 
-Agriculture is highly dependent on environmental factors such as soil quality, rainfall, and climate conditions. Many farmers still rely on traditional methods and experience difficulty predicting crop productivity.
+Agriculture is highly influenced by environmental conditions such as climate, soil nutrients, and rainfall patterns. Many farmers still rely on traditional knowledge and experience rather than data-driven tools, which can lead to poor crop planning and reduced productivity.
 
-HarvestAI provides a smart decision support system that helps farmers:
+AI for Zero Hunger provides an intelligent decision-support platform that uses machine learning to analyze agricultural data and predict crop yield. The platform also includes a web-based dashboard where users can explore agricultural insights and predictions in a simple and accessible way.
 
-Predict crop yield using machine learning
+The goal of the project is to demonstrate how artificial intelligence can be used to support sustainable farming and improve food production.
 
-Monitor environmental conditions
+Key Features
 
-Visualize agricultural data
+AI-Based Crop Yield Prediction
+The system predicts crop yield based on environmental and soil parameters such as nitrogen, phosphorus, potassium, rainfall, temperature, and humidity.
 
-Make better crop planning decisions
+Weather and Environmental Insights
+The platform allows users to understand how environmental factors influence crop productivity.
 
-The platform combines AI models with an interactive dashboard to make agricultural insights accessible and easy to understand.
+Interactive Farming Dashboard
+The web interface allows users to input agricultural data and view predictions and insights.
 
-🎯 Key Features
-🌱 AI Crop Yield Prediction
+Data Visualization
+Charts and visual representations help users understand trends in agricultural data.
 
-Predicts crop yield based on:
+AI-Based Decision Support
+The platform helps farmers make informed decisions about crop planning and resource utilization.
 
-Soil nutrients (Nitrogen, Phosphorus, Potassium)
+Technology Stack
 
-Temperature
-
-Rainfall
-
-Humidity
-
-Crop type
-
-🌦 Weather Monitoring Dashboard
-
-Provides weather insights to help farmers plan:
-
-Irrigation
-
-Crop selection
-
-Harvesting schedules
-
-🗺 Interactive Farm Map
-
-Location-based insights using mapping tools to help visualize farm data and regional conditions.
-
-📊 Farm Analytics Dashboard
-
-Interactive charts and visualizations for agricultural data including:
-
-Crop yield trends
-
-Rainfall analysis
-
-Environmental conditions
-
-🤖 AI-based Decision Support
-
-Provides recommendations that help farmers improve productivity and resource utilization.
-
-🧠 Machine Learning Model
-
-The system uses supervised machine learning models trained on agricultural datasets.
-
-Model Inputs
-
-Nitrogen (N)
-
-Phosphorus (P)
-
-Potassium (K)
-
-Temperature
-
-Rainfall
-
-Humidity
-
-Crop type
-
-Model Output
-
-Predicted crop yield
-
-Farming insights
-
-Productivity recommendations
-
-ML Workflow
-Dataset Collection
-        ↓
-Data Preprocessing
-        ↓
-Feature Selection
-        ↓
-Model Training
-(Random Forest / Regression)
-        ↓
-Model Evaluation
-        ↓
-Crop Yield Prediction
-🏗 System Architecture
-            Farmer Input
-     (Soil + Weather + Crop Data)
-                   │
-                   ▼
-            Data Processing
-            (Python + Pandas)
-                   │
-                   ▼
-         Machine Learning Model
-          (Scikit-learn Model)
-                   │
-                   ▼
-             Prediction API
-             (Node.js Server)
-                   │
-                   ▼
-          Web Dashboard Interface
-         (React + Chart Visualizations)
-                   │
-                   ▼
-        Farming Insights & Prediction
-🛠 Technology Stack
 Machine Learning
-
 Python
-
 Scikit-learn
-
 Pandas
-
 NumPy
-
 Jupyter Notebook
 
 Frontend
-
 HTML
-
 CSS
-
 JavaScript
 
-React
-
 Backend
-
 Node.js
-
 Express.js
 
 Data Visualization
-
 Chart.js
 
-Recharts
-
-Mapping
-
+Mapping and Visualization
 Leaflet.js
 
-📂 Project Structure
-HarvestAI/
-│
-├── CROP_YIELD_PREDICTOR.ipynb
-├── Smart_Farming_Crop_Yield_2024.csv
-├── CropYieldPredictor.jsx
-├── index.html
-├── server.js
-├── models/
-│
-└── README.md
-⚙️ Installation & Setup
-1️⃣ Clone the Repository
+Dataset
+
+The machine learning model is trained on agricultural datasets that include environmental and soil parameters such as:
+
+Temperature
+Rainfall
+Humidity
+Soil nutrient levels (Nitrogen, Phosphorus, Potassium)
+Crop type
+Historical crop yield data
+
+These parameters are used by the machine learning model to predict crop productivity.
+
+How to Run the Project
+
+Follow these steps to run the project locally.
+
+Step 1: Clone the repository
+
 git clone https://github.com/AishwaryaAara/AI-FOR-ZERO-HUNGER---Intelligent-AI.git
-2️⃣ Install Dependencies
-npm install
-3️⃣ Run Backend Server
-node server.js
-4️⃣ Train the Machine Learning Model
 
-Open the notebook:
+Step 2: Open the project folder on your computer.
 
-CROP_YIELD_PREDICTOR.ipynb
+Step 3: Locate the file named index.html in the project directory.
 
-Train the model and save the trained model for prediction.
+Step 4: Open index.html in any web browser such as Google Chrome, Microsoft Edge, or Firefox.
 
-📊 Dataset
+Once the file is opened in the browser, the web interface of the project will load and you can explore the dashboard and project features.
 
-The project uses agricultural datasets containing environmental and soil parameters such as:
+No additional installation is required to view the frontend interface.
 
-Soil nutrients
+Impact on Agriculture
 
-Weather conditions
+AI for Zero Hunger demonstrates how artificial intelligence can help improve agricultural productivity by providing predictive insights based on environmental conditions.
 
-Crop information
+The platform aims to support farmers by helping them understand the relationship between climate conditions, soil nutrients, and crop productivity. By using data-driven predictions, farmers can improve crop planning and reduce risks associated with uncertain weather patterns.
 
-Historical yield data
+Accessibility Considerations
 
-These features are used to train machine learning models for predicting crop yield.
+The platform is designed with a simple and easy-to-understand interface so that users with minimal technical knowledge can interact with the system. The web interface provides visual insights and clear outputs that make agricultural data easier to interpret.
 
-🌍 Impact on Farmers
+The system can also be extended in the future to support multiple languages and mobile-friendly access to ensure wider accessibility for farmers.
 
-HarvestAI helps farmers:
+Future Improvements
 
-Make better crop planning decisions
+Future improvements for the platform may include:
 
-Reduce risks caused by climate variability
-
-Optimize use of water, fertilizer, and soil
-
-Improve agricultural productivity
-
-The platform supports data-driven agriculture, enabling farmers to adopt modern technologies and increase income stability.
-
-♿ Accessibility & Inclusivity
-
-HarvestAI is designed to be accessible to farmers with minimal technical knowledge.
-
-Key considerations include:
-
-Simple and intuitive user interface
-
-Mobile-friendly platform
-
-Potential support for regional languages
-
-Easy-to-understand visual insights
-
-
-
-🔮 Future Scope
-
-Future improvements include:
-
-IoT sensor integration for real-time farm data
-
-Satellite imagery for crop monitoring
-
+Integration with real-time weather APIs
+Mobile application for farmers
+Satellite-based crop monitoring
 AI-based pest and disease detection
-
-Mobile application for rural farmers
-
-Advanced climate prediction models
+Integration with IoT-based soil sensors
